@@ -216,6 +216,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
 
+
+
 	XMFLOAT3* vertMap=nullptr;
 	result=vertBuff->Map(0, nullptr, (void**)&vertMap);
 
