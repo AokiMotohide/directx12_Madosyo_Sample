@@ -146,7 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	swapchainDesc.SampleDesc.Count = 1;
 	swapchainDesc.SampleDesc.Quality = 0;
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
-	swapchainDesc.BufferCount = 2;
+	swapchainDesc.BufferCount = 2; //ダブルバッファリングにおいて使うものの数
 	swapchainDesc.Scaling = DXGI_SCALING_STRETCH;
 	swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapchainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
@@ -167,6 +167,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;//特に指定なし
 	ID3D12DescriptorHeap* rtvHeaps = nullptr;
 	result = dev_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeaps));
+
+	//ディスクリプタとスワップチェーン上のバッファとの関連付けを行う
 	DXGI_SWAP_CHAIN_DESC swcDesc = {};
 	result = swapchain_->GetDesc(&swcDesc);
 	std::vector<ID3D12Resource*> _backBuffers(swcDesc.BufferCount);
@@ -176,6 +178,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		dev_->CreateRenderTargetView(_backBuffers[i], nullptr, handle);
 		handle.ptr += dev_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	}
+
 	ID3D12Fence* _fence = nullptr;
 	UINT64 _fenceVal = 0;
 	result = dev_->CreateFence(_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_fence));
@@ -237,6 +240,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			WaitForSingleObject(event, INFINITE);
 			CloseHandle(event);
 		}
+
 		cmdAllocator_->Reset();//キューをクリア
 		cmdList_->Reset(cmdAllocator_, nullptr);//再びコマンドリストをためる準備
 
