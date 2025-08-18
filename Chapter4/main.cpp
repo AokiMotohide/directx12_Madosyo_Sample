@@ -260,8 +260,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	ID3DBlob* _vsBlob = nullptr;
 	ID3DBlob* _psBlob = nullptr;
-
 	ID3DBlob* errorBlob = nullptr;
+
 	result = D3DCompileFromFile(L"BasicVertexShader.hlsl",
 		nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"BasicVS", "vs_5_0", 
@@ -280,6 +280,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		exit(1);//行儀悪いかな…
 	}
+
 	result = D3DCompileFromFile(L"BasicPixelShader.hlsl",
 		nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"BasicPS", "ps_5_0",
@@ -298,8 +299,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		exit(1);//行儀悪いかな…
 	}
+
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 },
+		{ 
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0 
+		},
 	};
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline = {};
@@ -371,6 +381,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ID3D12PipelineState* _pipelinestate = nullptr;
 	result = _dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&_pipelinestate));
 
+
+	//ビューポートの作成
 	D3D12_VIEWPORT viewport = {};
 	viewport.Width = window_width;//出力先の幅(ピクセル数)
 	viewport.Height = window_height;//出力先の高さ(ピクセル数)
